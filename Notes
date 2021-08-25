@@ -1,3 +1,11 @@
 
 #Hanna:
-    https://www.digikey.com/en/maker/blogs/2019/running-python-programs-on-startup-using-the-raspberry-pi    #Run on boot tuturial
+    1-Run on boot tut. -> https://www.digikey.com/en/maker/blogs/2019/running-python-programs-on-startup-using-the-raspberry-pi    
+    2-nlp tuturial     -> https://realpython.com/python-speech-recognition/
+    3-nlp sphinx recognizer is the only offline method the other 6 works online only "Speech Recognition"
+    4-recognize_sphinx(): CMU Sphinx - requires installing PocketSphinx ("OFFLINE")
+    5-pip install SpeechRecognition  @@@Listener.py@@@
+    6-pip install pyrebase            @@@Reader.py@@@
+    7-audio file for testing -> https://github.com/realpython/python-speech-recognition.git
+    8-arabic lang =>https://github.com/alphacep/vosk-api/tree/master/python/example
+    
