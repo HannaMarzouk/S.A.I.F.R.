@@ -1,0 +1,262 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./bootstrap.min.css">
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+    <link rel="stylesheet" href="./SAIFR.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>SAIFER</title>
+</head>
+<body>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script>
+    const firebaseConfig = {
+
+  apiKey: "AIzaSyArr_N_bfnhw143Sm0kBjKBlDdsJzj7NzQ",
+
+  authDomain: "saifr-3c037.firebaseapp.com",
+
+  databaseURL: "https://saifr-3c037-default-rtdb.europe-west1.firebasedatabase.app",
+
+  projectId: "saifr-3c037",
+
+  storageBucket: "saifr-3c037.appspot.com",
+
+  messagingSenderId: "464125842101",
+
+  appId: "1:464125842101:web:02f5fe14c4bab7502624fc",
+
+  measurementId: "G-NNPNBWT1H6"
+
+};
+
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+    //window.onload = write_defualts;
+    window.onload = readData;
+    var Fans_status = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+    var Light_status = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+    var Name = "";
+    function change_value(Data_child_name,Data_Value) 
+    {
+        
+        if(Data_child_name == "Fans")
+        {
+            if(Fans_status[Data_Value] == 0)
+            {
+            Fans_status[Data_Value] = 1 ;
+            Name = "Room" + Data_Value;
+            firebase.database().ref().child("Smart Home").child(Name).child(Data_child_name).set('1');
+            }
+            else if(Fans_status[Data_Value] == 1)
+            {
+            Fans_status[Data_Value] = 0 ;
+            Name = "Room" + Data_Value;
+            firebase.database().ref().child("Smart Home").child(Name).child(Data_child_name).set('0');
+            }    
+        }
+        else if(Data_child_name == "Lights")
+        {
+            if(Light_status[Data_Value] == 0)
+            {
+            Light_status[Data_Value] = 1 ;
+            Name = "Room" + Data_Value;
+            firebase.database().ref().child("Smart Home").child(Name).child(Data_child_name).set('1');
+            }
+            else if(Light_status[Data_Value] == 1)
+            {
+            Light_status[Data_Value] = 0 ;
+            Name = "Room" + Data_Value;
+            firebase.database().ref().child("Smart Home").child(Name).child(Data_child_name).set('0');
+            }
+        }
+        else{
+        firebase.database().ref().child(Data_child_name).set(Data_Value);
+        }
+    }
+    var Topic_now , Motion_now;
+    
+    function readData()
+    {
+        firebase.database().ref().child("LED").set('off!');
+        firebase.database().ref().child("Motion").set('Rest!');
+
+        firebase.database().ref().child("LED").on('value', function (snapshot) 
+        {
+                console.log('LED Value is :' +snapshot.val());
+
+        });
+        firebase.database().ref().child("Motion").on('value', function (snapshot) 
+        {
+                console.log('Motion Value is :' + snapshot.val()); 
+        });
+        firebase.database().ref().child("Battery_percentage").on('value', function (snapshot) 
+        {
+                document.getElementById('Battery_Percent').innerHTML = snapshot.val() + '%'; 
+        });   
+        
+    }
+    </script>
+
+<nav id="first" class="robot">
+    <div class="container container-fluid">
+        <div class="row">
+            <img src="./Images/760-7606388_robot-spider-.png"  alt=""> 
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="row"> <a href="#move" class="bg-danger">Movement</a></div>
+                <div class="row"><a href="" class="bg-success">Gripper</a></div>
+            </div>
+            <div class="col-6">
+                <div class="row"><a href="#bttry" onclick="SmartH()" class="bg-warning">Smart Home</a></div>
+                <div class="row"><a href="#bttry" onclick="Battery()" class="bg-primary">Battery</a></div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <div id="move" class="movement">
+            <div class="container container-fluid">
+                <h1>Movement</h1>
+                <div class="row ml-auto">
+                    <div class="col-6">
+                        <div class="row ml-auto rowH">
+                            <div class="col-3">
+                                <button onclick="change_value('Motion','left')" class="db"><i class="fa fa-arrow-left"></i></button>
+                            </div>
+                            <div class="col-6">
+                                <button onclick="change_value('Motion','up')" ><i class="fa fa-arrow-up"></i></button>
+                                <img class="imgH"src="./Images/download.png" alt="">
+                                <button onclick="change_value('Motion','down')" ><i class="fa fa-arrow-down"></i></button>
+                            </div>
+                            <div class="col-3">
+                                <button onclick="change_value('Motion','right')" class="db"><i class="fa fa-arrow-right"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mt-5">
+                            <div class="col-6">
+                                <button onclick="change_value('Motion','stop')" class="bg-danger">Stop</button>
+                            </div>
+                            <div class="col-6">
+                                <button onclick="change_value('Motion','follow')" class="bg-warning">Follow</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-5 ml-auto">
+                        <button onclick="getLocation()">GPS</button>
+                        <p id="mapholder"> GPS Here</p>
+                    </div>
+                </div>
+        </div>
+    </div>
+    <div id="bttry" class="btry">
+        <div class="row">
+            <div id="bry" class="col-6">
+                <h1>Battery</h1>
+                <div class="row">
+                    <div class="col-5 bg-primary" style="align-self: center;padding: 0%;">
+                        <button onclick="change_value('Battery_status','on')" >Open Circuit</button>
+                        <button onclick="change_value('Battery_status','off')" class="bg-danger">Close Circuit</button>
+                        <p id = "Battery_Percent"></p>
+                    </div>
+                    <div class="col-5">
+                        <img src="./Images/download.jpeg" alt="">
+                    </div>
+                </div>
+            </div>
+            <div id="HC"class="col-6">
+                <h1>SmartHome</h1>
+                <input type="text" name="" id="numOfRooms">
+                <button id="RB" style="height: auto;
+                width: fit-content;" onclick="create()">Create</button> 
+                <p id="RN"></p>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        function Battery()
+        {
+            document.getElementById("HC").style.display= "none";
+        }
+        function SmartH()
+        {
+            document.getElementById("bry").style.display= "none";
+            document.getElementById("HC").style.paddingBottom= "30%";
+            
+        }
+
+        function getLocation() {
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition,showError);
+                } 
+            else { 
+                x.innerHTML = "Geolocation is not supported by this browser.";
+                }
+            }
+
+            function showError(error) {
+            switch(error.code) {
+            case error.PERMISSION_DENIED:
+            x.innerHTML = "User denied the request for Geolocation."
+            break;
+            case error.POSITION_UNAVAILABLE:
+            x.innerHTML = "Location information is unavailable."
+            break;
+            case error.TIMEOUT:
+            x.innerHTML = "The request to get user location timed out."
+            break;
+            case error.UNKNOWN_ERROR:
+            x.innerHTML = "An unknown error occurred."
+            break;
+  }
+}
+
+            function showPosition(position) {
+            var latlon = position.coords.latitude + "," + position.coords.longitude;
+
+            var img_url = "https://maps.googleapis.com/maps/api/staticmap?center="+latlon+"&zoom=14&size=400x300&sensor=false&key=YOUR_KEY";
+            document.getElementById("mapholder").innerHTML = "<img src='"+img_url+"'>";
+            }
+
+            let rooms;
+
+
+        function create()
+        {
+            const val = document.querySelector('input').value;
+            count = val;
+            rooms = `<table class="roomsT">
+        <tr> 
+            <th><b>Rooms</b></th>
+            <th><b>Fans</b></th>
+            <th><b>Light</b></th>
+            <th><b>Temp</b></th>
+        </tr>`;
+        for(let i = 0 ; i <count;i++)
+            { 
+                rooms += `<tr>
+                <td> <label for="">${i}</label> </td>
+                <td><input type="checkbox"onclick="change_value('Fans',${i})" >  </td>
+                <td><input type="checkbox"onclick="change_value('Lights',${i})" ></td>
+                <td><label id = "${i}" for="">counter</label></td>
+            </tr>`
+            }
+            rooms += `</table>`;
+            document.getElementById('RN').innerHTML=rooms
+            document.querySelector('input').style.display= "none";
+            document.querySelector('#RB').style.display= "none";
+            // document.querySelector('input').style.visibility="hidden";
+            // document.querySelector('#RB').style.visibility ="hidden";
+        }
+   
+    </script>
+</body>
+</html>
